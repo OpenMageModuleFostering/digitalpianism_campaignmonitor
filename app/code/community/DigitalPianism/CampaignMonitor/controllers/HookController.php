@@ -54,7 +54,7 @@ class DigitalPianism_CampaignMonitor_HookController extends Mage_Newsletter_Subs
 				{
                     $customer = $customerHelper->getCustomer();
                     $name = $customer->getFirstname() . " " . $customer->getLastname();
-                    $customFields = DigitalPianism_CampaignMonitor_Model_Customer_Observer::generateCustomFields($customer);
+                    $customFields = Mage::helper('campaignmonitor')->generateCustomFields($customer);
 					
                     try 
 					{

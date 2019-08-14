@@ -3,7 +3,7 @@
 	
 	<modules>
         <DigitalPianism_CampaignMonitor>
-            <version>0.7.7</version>
+            <version>0.7.9</version>
         </DigitalPianism_CampaignMonitor>
     </modules>
     
@@ -50,6 +50,13 @@
   	</admin>
     
 	<global>
+
+		<blocks>
+			<!-- Declare module blocks -->
+			<campaignmonitor>
+				<class>DigitalPianism_CampaignMonitor_Block</class>
+			</campaignmonitor>
+		</blocks>
 	
 		<!-- Rewrite the save action of the frontend newsletter management page -->
 		<rewrite>
