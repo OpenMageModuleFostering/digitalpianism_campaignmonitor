@@ -12,7 +12,7 @@ class DigitalPianism_CampaignMonitor_AuthController extends Mage_Core_Controller
         $code = $this->getRequest()->getQuery('code');
 		$state = $this->getRequest()->getQuery('state');
 
-        $adminUrl = Mage::helper("adminhtml")->getUrl("admincampaignmonitor/adminhtml_auth/callback", array( 'code' => $code, 'state' => $state ));
+        $adminUrl = Mage::helper("adminhtml")->getUrl("adminhtml/campaignmonitor/callback", array( 'code' => $code, 'state' => $state ));
 
         $this->_redirectUrl($adminUrl);
         return;

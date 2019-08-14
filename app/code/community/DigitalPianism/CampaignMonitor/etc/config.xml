@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
 <config>
-	
+
 	<modules>
-        <DigitalPianism_CampaignMonitor>
-            <version>0.7.9</version>
-        </DigitalPianism_CampaignMonitor>
-    </modules>
-    
+		<DigitalPianism_CampaignMonitor>
+			<version>0.8.0</version>
+		</DigitalPianism_CampaignMonitor>
+	</modules>
+
 	<frontend>
 		<routers>
 			<!-- Declare frontend name -->
 			<campaignmonitor>
 				<use>standard</use>
 				<args>
-                    <module>DigitalPianism_CampaignMonitor</module>
-                    <frontName>campaignmonitor</frontName>
+					<module>DigitalPianism_CampaignMonitor</module>
+					<frontName>campaignmonitor</frontName>
 				</args>
-            </campaignmonitor>
-        </routers>
+			</campaignmonitor>
+		</routers>
 		<!-- Frontend layout file -->
 		<!--
 		<layout>
@@ -28,27 +28,20 @@
             </updates>
         </layout>
 		-->
-    </frontend>
-	
+	</frontend>
+
 	<admin>
 		<routers>
-	  		<campaignmonitor>
-				<use>admin</use>
-				<args>
-		  			<module>DigitalPianism_CampaignMonitor</module>
-		  			<frontName>admincampaignmonitor</frontName>
-				</args>
-	  		</campaignmonitor>
 			<adminhtml>
-                <args>
-                    <modules>
-                        <DigitalPianism_CampaignMonitor before="Mage_Adminhtml">DigitalPianism_CampaignMonitor</DigitalPianism_CampaignMonitor>
-                    </modules>
-                </args>
-            </adminhtml>
+				<args>
+					<modules>
+						<DigitalPianism_CampaignMonitor before="Mage_Adminhtml">DigitalPianism_CampaignMonitor_Adminhtml</DigitalPianism_CampaignMonitor>
+					</modules>
+				</args>
+			</adminhtml>
 		</routers>
-  	</admin>
-    
+	</admin>
+
 	<global>
 
 		<blocks>
@@ -57,7 +50,7 @@
 				<class>DigitalPianism_CampaignMonitor_Block</class>
 			</campaignmonitor>
 		</blocks>
-	
+
 		<!-- Rewrite the save action of the frontend newsletter management page -->
 		<rewrite>
 			<digitalpianism_campaignmonitor_new>
@@ -65,14 +58,14 @@
 				<to>/campaignmonitor/hook</to>
 			</digitalpianism_campaignmonitor_new>
 		</rewrite>
-		
+
 		<helpers>
 			<!-- Declare module helpers -->
 			<campaignmonitor>
 				<class>DigitalPianism_CampaignMonitor_Helper</class>
 			</campaignmonitor>
 		</helpers>
-		
+
 		<models>
 			<!-- Declare module models -->
 			<campaignmonitor>
@@ -80,13 +73,13 @@
 			</campaignmonitor>
 			<!-- Override original checkout onepage model -->
 			<checkout>
-        		<rewrite>
+				<rewrite>
 					<!-- Mage_Checkout_Model_Type_Onepage -->
-        			<!--<type_onepage>DigitalPianism_CampaignMonitor_Model_Checkout_Type_Onepage</type_onepage>-->
-        		</rewrite>
-        	</checkout>
+					<!--<type_onepage>DigitalPianism_CampaignMonitor_Model_Checkout_Type_Onepage</type_onepage>-->
+				</rewrite>
+			</checkout>
 		</models>
-		
+
 		<!-- Observer events -->
 		<events>
 			<customer_save_before>
@@ -97,7 +90,7 @@
 						<method>check_subscription_status</method>
 					</digitalpianism_campaignmonitor_observer>
 				</observers>
-			</customer_save_before>     
+			</customer_save_before>
 			<customer_delete_before>
 				<observers>
 					<digitalpianism_campaignmonitor_observer_2>
@@ -107,6 +100,16 @@
 					</digitalpianism_campaignmonitor_observer_2>
 				</observers>
 			</customer_delete_before>
+			<!-- After a customer has successfully registered -->
+			<customer_register_success>
+				<observers>
+					<digitalpianism_campaignmonitor_observer_customer_register_success>
+						<type>singleton</type>
+						<class>campaignmonitor/customer_observer</class>
+						<method>subscribeCustomer</method>
+					</digitalpianism_campaignmonitor_observer_customer_register_success>
+				</observers>
+			</customer_register_success>
 			<!-- TODO
 			<checkout_type_onepage_save_order_after>
                 <observers>
@@ -119,7 +122,7 @@
             </checkout_type_onepage_save_order_after>
 			-->
 		</events>
-		
+
 	</global>
-	
+
 </config>

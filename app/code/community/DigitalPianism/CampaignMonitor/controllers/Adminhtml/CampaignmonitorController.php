@@ -2,9 +2,9 @@
 require_once MAGENTO_ROOT . "/lib/createsend/csrest_general.php";
 
 /**
- * Class DigitalPianism_CampaignMonitor_Adminhtml_AuthController
+ * Class DigitalPianism_CampaignMonitor_Adminhtml_CampaignmonitorController
  */
-class DigitalPianism_CampaignMonitor_Adminhtml_AuthController extends Mage_Adminhtml_Controller_Action
+class DigitalPianism_CampaignMonitor_Adminhtml_CampaignmonitorController extends Mage_Adminhtml_Controller_Action
 {
 
     const CAMPAIGNMONITOR_AUTH_URL = 'https://api.createsend.com/oauth';
@@ -12,6 +12,16 @@ class DigitalPianism_CampaignMonitor_Adminhtml_AuthController extends Mage_Admin
 
     const CAMPAIGNMONITOR_SESSION_DATA_KEY = 'campaignmonitor_session_data';
     const CAMPAIGNMONITOR_CONFIG_DATA_KEY = 'newsletter/campaignmonitor/campaignmonitor_data';
+
+    /**
+     * Check for is allowed
+     *
+     * @return boolean
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('system/config/newsletter');
+    }
 
     public function preDispatch()
     {
