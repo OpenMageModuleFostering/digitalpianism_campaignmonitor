@@ -67,14 +67,10 @@ class CS_REST_Segments extends CS_REST_Wrapper_Base {
      *     This should be an array of the form 
      *         array(
      *             'Title' => The title of the new segment
-     *             'RuleGroups' => array(
+     *             'Rules' => array(
      *                 array(
-     *                     'Rules' => array(
-     *                         array(
-     *                             'RuleType' => The subject of this rule
-     *                             'Clause' => The specific clauses for this rule
-     *                         )
-     *                     )
+     *                     'Subject' => The subject of this rule
+     *                     'Clauses' => array<string> The specific clauses for this rule
      *                 )
      *             )
      *         )
@@ -89,15 +85,11 @@ class CS_REST_Segments extends CS_REST_Wrapper_Base {
      * @param $segment_details The new details for the segment
      *     This should be an array of the form 
      *         array(
-     *             'Title' => The title of the new segment
-     *             'RuleGroups' => array(
+     *             'Title' => The new title for the segment
+     *             'Rules' => array(
      *                 array(
-     *                     'Rules' => array(
-     *                         array(
-     *                             'RuleType' => The subject of this rule
-     *                             'Clause' => The specific clauses for this rule
-     *                         )
-     *                     )
+     *                     'Subject' => The subject of this rule
+     *                     'Clauses' => array<string> The specific clauses for this rule
      *                 )
      *             )
      *         )
@@ -112,17 +104,13 @@ class CS_REST_Segments extends CS_REST_Wrapper_Base {
      * @param $rule The rule to add to the segment
      *     This should be an array of the form
      *         array(
-     *             'Rules' => array(
-     *                 array(
-     *                     'RuleType' => The subject of this rule
-     *                     'Clause' => The specific clauses for this rule
-     *                 )
-     *             )
+     *             'Subject' => The subject of this rule
+     *             'Clauses' => array<string> The specific clauses for this rule
      *         )
      * @return CS_REST_Wrapper_Result A successful response will be empty
      */
-    function add_rulegroup($rulegroup) {
-        return $this->post_request($this->_segments_base_route.'/rules.json', $rulegroup);
+    function add_rule($rule) {
+        return $this->post_request($this->_segments_base_route.'/rules.json', $rule);
     }
     
     /**

@@ -37,14 +37,10 @@ abstract class CS_REST_TestSegments extends CS_REST_TestBase {
 
         $segment = array (
             'Title' => 'ABC Widgets Subscribers',
-            'RuleGroups' => array(
+            'Rules' => array(
                 array(
-                    'Rules' => array(
-                        array(
-                            'RuleType' => 'EmailAddress',
-                            'Clause' => 'CONTAINS abcwidgets.com'
-                        )
-                    )
+                    'Subject' => 'EmailAddress',
+                    'Clauses' => array('CONTAINS abcwidgets.com')
                 )
             )
         );
@@ -73,14 +69,10 @@ abstract class CS_REST_TestSegments extends CS_REST_TestBase {
 
         $segment = array (
             'Title' => 'ABC Widgets Subscribers',
-            'RuleGroups' => array(
+            'Rules' => array(
                 array(
-                    'Rules' => array(
-                        array(
-                            'RuleType' => 'EmailAddress',
-                            'Clause' => 'CONTAINS abcwidgets.com'
-                        )
-                    )
+                    'Subject' => 'EmailAddress',
+                    'Clauses' => array('CONTAINS abcwidgets.com')
                 )
             )
         );
@@ -89,22 +81,18 @@ abstract class CS_REST_TestSegments extends CS_REST_TestBase {
             $raw_result, $raw_result, 'segment was serialised to this');
     }
 
-    function testadd_rulegroup() {
+    function testadd_rule() {
         $raw_result = '';
 
         $call_options = $this->get_call_options($this->segment_base_route.'/rules.json', 'POST');
 
-        $rulegroup = array(
-            'Rules' => array(
-                array(
-                    'RuleType' => 'EmailAddress',
-                    'Clause' => 'CONTAINS abcwidgets.com'
-                )
-            )
+        $rule = array (
+            'Subject' => 'EmailAddress',
+            'Clauses' => array('CONTAINS abcwidgets.com')
         );
 
-        $this->general_test_with_argument('add_rulegroup', $rulegroup, $call_options,
-            $raw_result, $raw_result, 'rulegroup was serialised to this');
+        $this->general_test_with_argument('add_rule', $rule, $call_options,
+            $raw_result, $raw_result, 'rule was serialised to this');
     }
 
     function testget() {

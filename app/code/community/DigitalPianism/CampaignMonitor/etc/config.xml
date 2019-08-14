@@ -3,7 +3,7 @@
 	
 	<modules>
         <DigitalPianism_CampaignMonitor>
-            <version>0.7.11</version>
+            <version>0.7.2</version>
         </DigitalPianism_CampaignMonitor>
     </modules>
     
@@ -18,38 +18,21 @@
 				</args>
             </campaignmonitor>
         </routers>
-		<!-- Frontend layout file -->
-		<!--
-		<layout>
-            <updates>
-                <campaignmonitor>
-                    <file>digitalpianism/campaignmonitor.xml</file>
-                </campaignmonitor>
-            </updates>
-        </layout>
-		-->
     </frontend>
 	
 	<admin>
 		<routers>
-			<adminhtml>
-                <args>
-                    <modules>
-                        <DigitalPianism_CampaignMonitor before="Mage_Adminhtml">DigitalPianism_CampaignMonitor_Adminhtml</DigitalPianism_CampaignMonitor>
-                    </modules>
-                </args>
-            </adminhtml>
+	  		<campaignmonitor>
+				<use>admin</use>
+				<args>
+		  			<module>DigitalPianism_CampaignMonitor</module>
+		  			<frontName>campaignmonitor</frontName>
+				</args>
+	  		</campaignmonitor>
 		</routers>
   	</admin>
     
 	<global>
-
-		<blocks>
-			<!-- Declare module blocks -->
-			<campaignmonitor>
-				<class>DigitalPianism_CampaignMonitor_Block</class>
-			</campaignmonitor>
-		</blocks>
 	
 		<!-- Rewrite the save action of the frontend newsletter management page -->
 		<rewrite>
@@ -57,6 +40,10 @@
 				<from><![CDATA[#^/newsletter/subscriber#]]></from>
 				<to>/campaignmonitor/hook</to>
 			</digitalpianism_campaignmonitor_new>
+			<digitalpianism_campaignmonitor_admin>
+				<from><![CDATA[#^/admin/newsletter_subscriber/massUnsubscribe#]]></from>
+				<to>/campaignmonitor/adminhook</to>
+			</digitalpianism_campaignmonitor_admin>
 		</rewrite>
 		
 		<helpers>
@@ -71,13 +58,6 @@
 			<campaignmonitor>
 				<class>DigitalPianism_CampaignMonitor_Model</class>
 			</campaignmonitor>
-			<!-- Override original checkout onepage model -->
-			<checkout>
-        		<rewrite>
-					<!-- Mage_Checkout_Model_Type_Onepage -->
-        			<!--<type_onepage>DigitalPianism_CampaignMonitor_Model_Checkout_Type_Onepage</type_onepage>-->
-        		</rewrite>
-        	</checkout>
 		</models>
 		
 		<!-- Observer events -->
@@ -100,17 +80,6 @@
 					</digitalpianism_campaignmonitor_observer_2>
 				</observers>
 			</customer_delete_before>
-			<!-- TODO
-			<checkout_type_onepage_save_order_after>
-                <observers>
-                    <subscribeCustomer>
-                        <type>singleton</type>
-                        <class>campaignmonitor/checkout_observer</class>
-                        <method>subscribeCustomer</method>
-                    </subscribeCustomer>
-                </observers>
-            </checkout_type_onepage_save_order_after>
-			-->
 		</events>
 		
 	</global>

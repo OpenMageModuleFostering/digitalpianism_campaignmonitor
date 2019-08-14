@@ -2,15 +2,12 @@
 include_once MAGENTO_ROOT . "/lib/createsend/csrest_lists.php";
 include_once MAGENTO_ROOT . "/lib/createsend/csrest_general.php";
 
-/**
- * Class DigitalPianism_CampaignMonitor_Helper_Data
- */
 class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstract
 {
 	const CAMPAIGNMONITOR_CONFIG_DATA_KEY = 'newsletter/campaignmonitor/campaignmonitor_data';
 	const CAMPAIGNMONITOR_SESSION_DATA_KEY = 'campaignmonitor_session_data';
 	
-	protected $logFileName = 'digitalpianism_campaignmonitor.log';
+	protected $logFileName = 'factoryx_campaignmonitor.log';
 	
 	/**
 	 * Log data
@@ -24,10 +21,7 @@ class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstra
 	/*
 	 *	Check if the auth type is OAuth
 	 */
-    /**
-     * @return bool
-     */
-    public function isOAuth()
+	public function isOAuth()
 	{
 		if (Mage::getStoreConfig('newsletter/campaignmonitor/authentication_type') == "oauth") return true;
 		else return false;
@@ -36,10 +30,7 @@ class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstra
 	/*
 	 *	Retrieve the API Key
 	 */
-    /**
-     * @return string
-     */
-    public function getApiKey()
+	public function getApiKey()
 	{
 		return trim(Mage::getStoreConfig('newsletter/campaignmonitor/api_key'));
 	}
@@ -47,10 +38,7 @@ class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstra
 	/*
 	 *	Retrieve the List ID
 	 */
-    /**
-     * @return string
-     */
-    public function getListId()
+	public function getListId()
 	{
 		return trim(Mage::getStoreConfig('newsletter/campaignmonitor/list_id'));
 	}
@@ -58,10 +46,7 @@ class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstra
 	/*
 	 *	Retrieve the Client ID
 	 */
-    /**
-     * @return string
-     */
-    public function getClientId()
+	public function getClientId()
 	{
 		return trim(Mage::getStoreConfig('newsletter/campaignmonitor/client_id'));
 	}
@@ -69,20 +54,13 @@ class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstra
 	/*
 	 *	Retrieve the Client Secret
 	 */
-    /**
-     * @return string
-     */
-    public function getClientSecret()
+	public function getClientSecret()
 	{
 		return trim(Mage::getStoreConfig('newsletter/campaignmonitor/client_secret'));
 	}
 	
 	// get array of linked attributes from the config settings and
     // populate it
-    /**
-     * @param $customer
-     * @return array
-     */
     public static function generateCustomFields($customer)
     {
         $linkedAttributes = @unserialize(Mage::getStoreConfig('newsletter/campaignmonitor/m_to_cm_attributes',
@@ -123,6 +101,7 @@ class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstra
                 }
                 else if(strncmp('DIGITALPIANISM', $magentoAtt, 6) == 0)
                 {
+                    $d = false;
                     // 15 == strlen('DIGITALPIANISM-billing-')
                     if(strncmp('DIGITALPIANISM-billing', $magentoAtt, 14) == 0)
                     {

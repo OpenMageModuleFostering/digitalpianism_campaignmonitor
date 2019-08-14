@@ -1,13 +1,6 @@
 <?php
-
-/**
- * Class DigitalPianism_CampaignMonitor_Model_System_Config_Source_Authtype
- */
 class DigitalPianism_CampaignMonitor_Model_System_Config_Source_Authtype
 {
-    /**
-     * @return array
-     */
     public function toOptionArray()
     {
         return array(

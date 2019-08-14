@@ -1,6 +1,6 @@
 <?php
 
-if (!class_exists('Services_JSON', false)) {
+if (!class_exists('Services_JSON')) {
     require_once dirname(__FILE__).'/services_json.php';
 }
 

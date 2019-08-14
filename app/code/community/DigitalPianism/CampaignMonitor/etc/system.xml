@@ -14,7 +14,7 @@
 						<authentication_type translate="label">
 							<label>Authentication Type</label>
                             <frontend_type>select</frontend_type>
-							<frontend_model>campaignmonitor/adminhtml_system_config_source_authtype</frontend_model>
+							<frontend_model>digitalPianism_campaignMonitor_block_adminhtml_system_config_source_authtype</frontend_model>
                             <source_model>campaignmonitor/system_config_source_authtype</source_model>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
@@ -40,7 +40,7 @@
 						<auth translate="label comment">
                             <label>Auth user</label>
                             <frontend_type>text</frontend_type>
-                            <frontend_model>campaignmonitor/adminhtml_system_config_form_field_auth</frontend_model>
+                            <frontend_model>digitalPianism_campaignMonitor_block_adminhtml_system_config_form_field_auth</frontend_model>
                             <sort_order>13</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -50,7 +50,7 @@
 						<refresh_token translate="label comment">
                             <label>Refresh Token</label>
                             <frontend_type>text</frontend_type>
-                            <frontend_model>campaignmonitor/adminhtml_system_config_form_field_refreshtoken</frontend_model>
+                            <frontend_model>digitalPianism_campaignMonitor_block_adminhtml_system_config_form_field_refreshtoken</frontend_model>
                             <sort_order>14</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -76,7 +76,7 @@
 						</list_id>
 						<m_to_cm_attributes translate="comment">
 							<label>Mapping betweens form, models and CM</label>
-							<frontend_model>campaignmonitor/linkedattributes</frontend_model>
+							<frontend_model>digitalPianism_campaignMonitor_block_linkedattributes</frontend_model>
 							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
 							<sort_order>30</sort_order>
 							<show_in_default>1</show_in_default>
@@ -86,54 +86,6 @@
 						</m_to_cm_attributes>
 					</fields>
 				</campaignmonitor>
-				<!--
-				<checkoutnewsletter translate="label">
-                    <label>Checkout Newsletter</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>2</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
-                    <fields>
-                        <enable translate="label">
-                            <label>Enable</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>1</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </enable>
-                        <checked translate="label">
-                            <label>Checked by default</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>2</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </checked>
-                        <visible_guest translate="label">
-                            <label>Visible to guest</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>3</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </visible_guest>
-                        <visible_register translate="label">
-                            <label>Visible to registrant</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>4</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </visible_register>
-                    </fields>
-                </checkoutnewsletter>
-				-->
         	</groups>
         </newsletter>
     </sections>

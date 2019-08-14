@@ -1,10 +1,7 @@
 <?php
 require_once MAGENTO_ROOT . "/lib/createsend/csrest_general.php";
 
-/**
- * Class DigitalPianism_CampaignMonitor_Adminhtml_CampaignmonitorController
- */
-class DigitalPianism_CampaignMonitor_Adminhtml_CampaignmonitorController extends Mage_Adminhtml_Controller_Action
+class DigitalPianism_CampaignMonitor_Adminhtml_AuthController extends Mage_Adminhtml_Controller_Action
 {
 
     const CAMPAIGNMONITOR_AUTH_URL = 'https://api.createsend.com/oauth';
@@ -12,16 +9,6 @@ class DigitalPianism_CampaignMonitor_Adminhtml_CampaignmonitorController extends
 
     const CAMPAIGNMONITOR_SESSION_DATA_KEY = 'campaignmonitor_session_data';
     const CAMPAIGNMONITOR_CONFIG_DATA_KEY = 'newsletter/campaignmonitor/campaignmonitor_data';
-
-    /**
-     * Check for is allowed
-     *
-     * @return boolean
-     */
-    protected function _isAllowed()
-    {
-        return Mage::getSingleton('admin/session')->isAllowed('system/config/newsletter');
-    }
 
     public function preDispatch()
     {
@@ -45,7 +32,7 @@ class DigitalPianism_CampaignMonitor_Adminhtml_CampaignmonitorController extends
     public function callbackAction()
     {
         $code = $this->getRequest()->getParam('code');
-        //$state = $this->getRequest()->getParam('state');
+        $state = $this->getRequest()->getParam('state');
         $response = $this->_getAccessToken($code);
 		if ($response)
 		{
@@ -57,17 +44,13 @@ class DigitalPianism_CampaignMonitor_Adminhtml_CampaignmonitorController extends
 		}
 		else
 		{
-			Mage::helper('campaignmonitor')->log("There has been an error during the callback action to retrieve the access token");
+			// Error
 		}
 
         $redirectUrl = Mage::helper('campaignmonitor')->getAdminConfigSectionUrl();
         $this->_redirectUrl($redirectUrl);
     }
 
-    /**
-     * @param $code
-     * @return bool|mixed
-     */
     protected function _getAccessToken($code)
     {
         $result = CS_REST_General::exchange_token(
@@ -78,11 +61,10 @@ class DigitalPianism_CampaignMonitor_Adminhtml_CampaignmonitorController extends
 		);
 		
 		if ($result->was_successful()) {
-			/*
 			$access_token = $result->response->access_token;
 			$expires_in = $result->response->expires_in;
 			$refresh_token = $result->response->refresh_token;
-			*/
+			
 			return $result->response;
 		} else {
 			echo 'An error occurred:\n';
@@ -107,13 +89,9 @@ class DigitalPianism_CampaignMonitor_Adminhtml_CampaignmonitorController extends
         return $url;
     }
 
-    /**
-     * @return mixed
-     * @throws Mage_Core_Exception
-     */
     protected function _getAuthRedirectUri()
     {
-        return str_replace('http://','https://',Mage::app()->getStore(1)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)."campaignmonitor/auth/index");
+        return str_replace('http','https',Mage::app()->getStore(1)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)."campaignmonitor/auth/index");
     }
 
     protected function _getClientId()

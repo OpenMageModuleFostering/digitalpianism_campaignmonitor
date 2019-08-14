@@ -4,12 +4,8 @@ define('CS_REST_GET', 'GET');
 define('CS_REST_POST', 'POST');
 define('CS_REST_PUT', 'PUT');
 define('CS_REST_DELETE', 'DELETE');
-if (false === defined('CS_REST_SOCKET_TIMEOUT')) {
-    define('CS_REST_SOCKET_TIMEOUT', 10);
-}
-if (false === defined('CS_REST_CALL_TIMEOUT')) {
-    define('CS_REST_CALL_TIMEOUT', 10);
-}
+define('CS_REST_SOCKET_TIMEOUT', 10);
+define('CS_REST_CALL_TIMEOUT', 10);
 
 function CS_REST_TRANSPORT_get_available($requires_ssl, $log) {
     if(function_exists('curl_init') && function_exists('curl_exec')) {
@@ -89,6 +85,10 @@ class CS_REST_CurlTransport extends CS_REST_BaseTransport {
         curl_setopt($ch, CURLOPT_URL, $call_options['route']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, true);
+        if (Mage::getStoreConfig('newsletter/campaignmonitor/proxy')){ 
+            curl_setopt($ch, CURLOPT_PROXY, Mage::getStoreConfig('newsletter/campaignmonitor/proxy'));
+        }
+        
         $headers = array();
         $headers[] = 'Content-Type: '.$call_options['contentType'];
         
@@ -129,10 +129,7 @@ class CS_REST_CurlTransport extends CS_REST_BaseTransport {
         if($call_options['protocol'] === 'https') {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-
-            if(strlen(ini_get('curl.cainfo')) === 0) {
-                curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__).'/cacert.pem');
-            }
+            curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__).'/cacert.pem');
         }
 
         switch($call_options['method']) {
@@ -143,7 +140,7 @@ class CS_REST_CurlTransport extends CS_REST_BaseTransport {
                 break;
             case CS_REST_POST:
                 curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, isset($call_options['data']) ? $call_options['data'] : '');
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $call_options['data']);
                 break;
             case CS_REST_DELETE:
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, CS_REST_DELETE);
