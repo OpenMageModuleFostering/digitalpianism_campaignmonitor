@@ -1,8 +1,15 @@
-<?php       
+<?php
+
+/**
+ * Class DigitalPianism_CampaignMonitor_Block_Linkedattributes
+ */
 class DigitalPianism_CampaignMonitor_Block_Linkedattributes extends Mage_Adminhtml_Block_System_Config_Form_Field_Array_Abstract
 {
     protected $magentoOptions;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->addColumn('magento', array(
@@ -73,6 +80,11 @@ class DigitalPianism_CampaignMonitor_Block_Linkedattributes extends Mage_Adminht
         $this->magentoOptions['DIGITALPIANISM-shipping-country_id'] = 'Shipping Address: Country';
     }
 
+    /**
+     * @param string $columnName
+     * @return string
+     * @throws Exception
+     */
     protected function _renderCellTemplate($columnName)
     {
         if (empty($this->_columns[$columnName])) {

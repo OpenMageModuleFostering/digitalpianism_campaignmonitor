@@ -2,6 +2,9 @@
 include_once MAGENTO_ROOT . "/lib/createsend/csrest_subscribers.php";
 include_once Mage::getModuleDir('controllers','Mage_Newsletter').DS."SubscriberController.php";
 
+/**
+ * Class DigitalPianism_CampaignMonitor_HookController
+ */
 class DigitalPianism_CampaignMonitor_HookController extends Mage_Newsletter_SubscriberController
 {
     public function newAction()
@@ -51,7 +54,7 @@ class DigitalPianism_CampaignMonitor_HookController extends Mage_Newsletter_Subs
 				{
                     $customer = $customerHelper->getCustomer();
                     $name = $customer->getFirstname() . " " . $customer->getLastname();
-                    $customFields = DigitalPianism_CampaignMonitor_Model_Customer_Observer::generateCustomFields($customer);
+                    $customFields = Mage::helper('campaignmonitor')->generateCustomFields($customer);
 					
                     try 
 					{
@@ -68,7 +71,7 @@ class DigitalPianism_CampaignMonitor_HookController extends Mage_Newsletter_Subs
 								Mage::helper('campaignmonitor')->refreshToken();
 							}
 							// Make the call again
-							$result = $client->add(array(
+							$client->add(array(
 												"EmailAddress" => $email,
 												"Name" => $name,
 												"CustomFields" => $customFields,
@@ -102,7 +105,7 @@ class DigitalPianism_CampaignMonitor_HookController extends Mage_Newsletter_Subs
 								Mage::helper('campaignmonitor')->refreshToken();
 							}
 							// Make the call again
-							$result = $client->add(array(
+							$client->add(array(
 												"EmailAddress" => $email,
 												"Name" => "(Guest)",
 												"Resubscribe" => true  // if the subscriber is already unsubscried - subscribe again!
