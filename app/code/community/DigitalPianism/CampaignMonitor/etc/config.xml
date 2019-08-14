@@ -3,7 +3,7 @@
 	
 	<modules>
         <DigitalPianism_CampaignMonitor>
-            <version>0.7.3</version>
+            <version>0.7.4</version>
         </DigitalPianism_CampaignMonitor>
     </modules>
     
@@ -26,7 +26,7 @@
 				<use>admin</use>
 				<args>
 		  			<module>DigitalPianism_CampaignMonitor</module>
-		  			<frontName>campaignmonitor</frontName>
+		  			<frontName>admincampaignmonitor</frontName>
 				</args>
 	  		</campaignmonitor>
 		</routers>
@@ -42,7 +42,7 @@
 			</digitalpianism_campaignmonitor_new>
 			<digitalpianism_campaignmonitor_admin>
 				<from><![CDATA[#^/admin/newsletter_subscriber/massUnsubscribe#]]></from>
-				<to>/campaignmonitor/adminhook</to>
+				<to>/admincampaignmonitor/adminhook</to>
 			</digitalpianism_campaignmonitor_admin>
 		</rewrite>
 		
