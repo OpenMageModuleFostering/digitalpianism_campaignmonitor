@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/DigitalPianism_CampaignMonitor",
+    "type": "magento-module",
+    "license": "OSL-v3.0",
+    "homepage": "",
+    "description": "Integrates Magento with the Campaign Monitor mailing list manager using API V3. ",
+    "authors": [
+    {
+        "name": "Digital Pianism",
+        "email": "contact@digital-pianism.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

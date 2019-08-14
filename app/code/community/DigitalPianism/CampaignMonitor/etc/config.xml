@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<config>
+	
+	<modules>
+        <DigitalPianism_CampaignMonitor>
+            <version>0.7.0</version>
+        </DigitalPianism_CampaignMonitor>
+    </modules>
+    
+	<frontend>
+		<routers>
+			<!-- Declare frontend name -->
+			<campaignmonitor>
+				<use>standard</use>
+				<args>
+                    <module>DigitalPianism_CampaignMonitor</module>
+                    <frontName>campaignmonitor</frontName>
+				</args>
+            </campaignmonitor>
+        </routers>
+    </frontend>
+    
+	<global>
+	
+		<!-- Rewrite the save action of the frontend newsletter management page -->
+		<rewrite>
+			<digitalpianism_campaignmonitor_new>
+				<from><![CDATA[#^/newsletter/subscriber#]]></from>
+				<to>/campaignmonitor/hook</to>
+			</digitalpianism_campaignmonitor_new>
+			<digitalpianism_campaignmonitor_admin>
+				<from><![CDATA[#^/admin/newsletter_subscriber/massUnsubscribe#]]></from>
+				<to>/campaignmonitor/adminhook</to>
+			</digitalpianism_campaignmonitor_admin>
+		</rewrite>
+		
+		<helpers>
+			<!-- Declare module helpers -->
+			<campaignmonitor>
+				<class>DigitalPianism_CampaignMonitor_Helper</class>
+			</campaignmonitor>
+		</helpers>
+		
+		<models>
+			<!-- Declare module models -->
+			<campaignmonitor>
+				<class>DigitalPianism_CampaignMonitor_Model</class>
+			</campaignmonitor>
+		</models>
+		
+		<!-- Observer events -->
+		<events>
+			<customer_save_before>
+				<observers>
+					<digitalpianism_campaignmonitor_observer>
+						<type>singleton</type>
+						<class>campaignmonitor/customer_observer</class>
+						<method>check_subscription_status</method>
+					</digitalpianism_campaignmonitor_observer>
+				</observers>
+			</customer_save_before>     
+			<customer_delete_before>
+				<observers>
+					<digitalpianism_campaignmonitor_observer_2>
+						<type>singleton</type>
+						<class>campaignmonitor/customer_observer</class>
+						<method>customer_deleted</method>
+					</digitalpianism_campaignmonitor_observer_2>
+				</observers>
+			</customer_delete_before>
+		</events>
+		
+	</global>
+	
+</config>
