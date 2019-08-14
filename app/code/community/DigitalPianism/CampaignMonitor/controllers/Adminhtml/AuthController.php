@@ -91,7 +91,7 @@ class DigitalPianism_CampaignMonitor_Adminhtml_AuthController extends Mage_Admin
 
     protected function _getAuthRedirectUri()
     {
-        return str_replace('http','https',Mage::app()->getStore(1)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)."campaignmonitor/auth/index");
+        return str_replace('http://','https://',Mage::app()->getStore(1)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)."campaignmonitor/auth/index");
     }
 
     protected function _getClientId()
