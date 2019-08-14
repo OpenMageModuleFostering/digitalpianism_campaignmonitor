@@ -1,12 +1,9 @@
 <?php
 
-require_once '../csrest_general.php';
+require_once '../../csrest_general.php';
 
-$auth = array(
-    'access_token' => 'your access token',
-    'refresh_token' => 'your refresh token');
+$auth = array('api_key' => 'your api key');
 $wrap = new CS_REST_General($auth);
-
 
 $result = $wrap->get_clients();
 
