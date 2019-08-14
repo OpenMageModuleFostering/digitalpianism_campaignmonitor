@@ -7,7 +7,7 @@ class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstra
 	const CAMPAIGNMONITOR_CONFIG_DATA_KEY = 'newsletter/campaignmonitor/campaignmonitor_data';
 	const CAMPAIGNMONITOR_SESSION_DATA_KEY = 'campaignmonitor_session_data';
 	
-	protected $logFileName = 'factoryx_campaignmonitor.log';
+	protected $logFileName = 'digitalpianism_campaignmonitor.log';
 	
 	/**
 	 * Log data

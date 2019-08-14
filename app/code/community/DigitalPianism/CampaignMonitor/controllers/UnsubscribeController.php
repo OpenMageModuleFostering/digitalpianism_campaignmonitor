@@ -43,7 +43,7 @@ class DigitalPianism_CampaignMonitor_UnsubscribeController extends Mage_Core_Con
 							Mage::helper('campaignmonitor')->refreshToken();
 						}
 						// Make the call again
-						$result = $client->get($email));
+						$result = $client->get($email);
 					}
                 } 
 				catch (Exception $e) 
@@ -68,22 +68,68 @@ class DigitalPianism_CampaignMonitor_UnsubscribeController extends Mage_Core_Con
                     $session->addException($e, $this->__('There was a problem with the unsubscription'));
                     $this->_redirectReferer();
 				}
-                
-				// If we are unsubscribed in Campaign Monitor, mark us as
+				
+				// If we are unsubscribed, deleted or not subscribed in Campaign Monitor, mark us as
                 // unsubscribed in Magento.
-                if($state == "Unsubscribed")
+                if ($state != "Unsubscribed" && $state != "Not Subscribed" && $state != "Deleted")
                 {
 					try
 					{
-						Mage::helper('campaignmonitor')->log($this->__('Unsubscribing %s from Magento',$email));
+						$result = $client->unsubscribe($email);
+						if (!$result->was_successful()) {
+							// If you receive '121: Expired OAuth Token', refresh the access token
+							if ($result->response->Code == 121) {
+								// Refresh the token
+								Mage::helper('campaignmonitor')->refreshToken();
+							}
+							// Make the call again
+							$result = $client->unsubscribe($email);
+						}
 						
-						$unsubscribe = Mage::getModel('newsletter/subscriber')
+						if($result->was_successful()) 
+						{
+							$collection = Mage::getModel('newsletter/subscriber')
 									->loadByEmail($email)
 									->unsubscribe();
-						Mage::getSingleton('customer/session')->addSuccess($this->__('You were successfully unsubscribed'));
-					} 
-					catch (Exception $e) 
+							Mage::getSingleton('customer/session')->addSuccess($this->__('You were successfully unsubscribed'));
+						}
+					}
+					catch (Exception $e)
+                    {
+                        Mage::helper('campaignmonitor')->log(sprintf("%s", $e->getMessage()));
+                        Mage::getSingleton('customer/session')->addError($this->__('There was an error while saving your subscription details'));
+                    }
+                }
+                elseif($state == "Unsubscribed" || $state == "Not Subscribed" || $state == "Deleted")
+                {
+					try
 					{
+						$subscriberStatus = Mage::getModel('newsletter/subscriber')
+										->loadByEmail($email)
+										->getStatus();
+						// 2 = Not Activated
+						// 1 = Subscribed
+						// 3 = Unsubscribed
+						// 4 = Unconfirmed
+						if ($subscriberStatus != 3)
+						{
+							$unsubscribe = Mage::getModel('newsletter/subscriber')
+										->loadByEmail($email)
+										->unsubscribe();
+							Mage::getSingleton('customer/session')->addSuccess($this->__('You were successfully unsubscribed'));
+							
+							$block = Mage::getModel('cms/block')->load('unsubscribe-custom-message');
+
+							if ($block) 
+							{
+								Mage::getSingleton('customer/session')->addNotice($block->getContent());
+							}
+						}
+						else
+						{
+							Mage::getSingleton('customer/session')->addSuccess($this->__('You have already unsubscribed to our newsletter, click <a href="/subscribe">here</a> to resubscribe'));
+						}
+					} catch (Exception $e) {
                         Mage::helper('campaignmonitor')->log(sprintf("%s", $e->getMessage()));
                         Mage::getSingleton('customer/session')->addError($this->__('There was an error while saving your subscription details'));
                     }
@@ -94,6 +140,7 @@ class DigitalPianism_CampaignMonitor_UnsubscribeController extends Mage_Core_Con
                 }
             }
         }
+		$this->_redirect('/');
     }
 }
 ?>
