@@ -1,8 +1,12 @@
 <?php
 include_once MAGENTO_ROOT . "/lib/createsend/csrest_lists.php";
+include_once MAGENTO_ROOT . "/lib/createsend/csrest_general.php";
 
 class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstract
 {
+	const CAMPAIGNMONITOR_CONFIG_DATA_KEY = 'newsletter/campaignmonitor/campaignmonitor_data';
+	const CAMPAIGNMONITOR_SESSION_DATA_KEY = 'campaignmonitor_session_data';
+	
 	protected $logFileName = 'factoryx_campaignmonitor.log';
 	
 	/**
@@ -14,14 +18,45 @@ class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstra
 		Mage::log($data, null, $this->logFileName);
 	}
 	
+	/*
+	 *	Check if the auth type is OAuth
+	 */
+	public function isOAuth()
+	{
+		if (Mage::getStoreConfig('newsletter/campaignmonitor/authentication_type') == "oauth") return true;
+		else return false;
+	}
+	
+	/*
+	 *	Retrieve the API Key
+	 */
 	public function getApiKey()
 	{
 		return trim(Mage::getStoreConfig('newsletter/campaignmonitor/api_key'));
 	}
 	
+	/*
+	 *	Retrieve the List ID
+	 */
 	public function getListId()
 	{
 		return trim(Mage::getStoreConfig('newsletter/campaignmonitor/list_id'));
+	}
+	
+	/*
+	 *	Retrieve the Client ID
+	 */
+	public function getClientId()
+	{
+		return trim(Mage::getStoreConfig('newsletter/campaignmonitor/client_id'));
+	}
+	
+	/*
+	 *	Retrieve the Client Secret
+	 */
+	public function getClientSecret()
+	{
+		return trim(Mage::getStoreConfig('newsletter/campaignmonitor/client_secret'));
 	}
 	
 	// get array of linked attributes from the config settings and
@@ -116,5 +151,53 @@ class DigitalPianism_CampaignMonitor_Helper_Data extends Mage_Core_Helper_Abstra
 		
         return $customFields;
     }
+
+    /**
+     * Get module config section url in admin configuration
+     * @return string
+     */
+    public function getAdminConfigSectionUrl()
+    {
+        $url = Mage::getModel('adminhtml/url');
+        return $url->getUrl('adminhtml/system_config/edit', array(
+            '_current'  => true,
+            'section'   => 'newsletter'
+        ));
+    }
+	
+	/*
+	 *	Refresh the token
+	 */
+	public function refreshToken()
+	{
+		// Check if auth type is OAuth
+		if ($this->isOAuth())
+		{
+			// Get the credentials
+			$accessToken = Mage::getModel('campaignmonitor/auth')->getAccessToken();
+			$refreshToken = Mage::getModel('campaignmonitor/auth')->getRefreshToken();
+			
+			$auth = array(
+						'access_token' => $accessToken,
+						'refresh_token' => $refreshToken
+					);
+			
+			// Use the REST lib to refresh the token
+			$wrap = new CS_REST_General($auth);
+			list($new_access_token, $new_expires_in, $new_refresh_token) = $wrap->refresh_token();
+			
+			// Use stdClass as it's the same type as OG response
+			$response = new stdClass;
+			$response->access_token = $new_access_token;
+			$response->expires_in = $new_expires_in;
+			$response->refresh_token = $new_refresh_token;
+				
+			$session = Mage::getModel('core/session');
+			$session->setData(self::CAMPAIGNMONITOR_SESSION_DATA_KEY, $response);
+			
+			// Save $new_access_token, $new_expires_in, and $new_refresh_token
+			Mage::getConfig()->saveConfig(self::CAMPAIGNMONITOR_CONFIG_DATA_KEY, serialize($response), 'default', 0);
+		}
+	}
 	
 }

@@ -11,10 +11,55 @@
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
 					<fields>
+						<authentication_type translate="label">
+							<label>Authentication Type</label>
+                            <frontend_type>select</frontend_type>
+							<frontend_model>digitalPianism_campaignMonitor_block_adminhtml_system_config_source_authtype</frontend_model>
+                            <source_model>campaignmonitor/system_config_source_authtype</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+						</authentication_type>
+						<client_id translate="label">
+                            <label>Campaign Monitor Client ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </client_id>
+						<client_secret translate="label">
+                            <label>Campaign Monitor Client Secret</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </client_secret>
+						<auth translate="label comment">
+                            <label>Auth user</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>digitalPianism_campaignMonitor_block_adminhtml_system_config_form_field_auth</frontend_model>
+                            <sort_order>13</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Auth user on Campaign Monitor</comment>
+                        </auth>
+						<refresh_token translate="label comment">
+                            <label>Refresh Token</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>digitalPianism_campaignMonitor_block_adminhtml_system_config_form_field_refreshtoken</frontend_model>
+                            <sort_order>14</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </refresh_token>
                         <api_key translate="label">
                             <label>API Key</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>1</sort_order>
+                            <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -23,7 +68,7 @@
 						<list_id translate="label">
 							<label>API List ID</label>
 							<frontend_type>text</frontend_type>
-							<sort_order>2</sort_order>
+							<sort_order>21</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -33,7 +78,7 @@
 							<label>Mapping betweens form, models and CM</label>
 							<frontend_model>digitalPianism_campaignMonitor_block_linkedattributes</frontend_model>
 							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
-							<sort_order>5</sort_order>
+							<sort_order>30</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>

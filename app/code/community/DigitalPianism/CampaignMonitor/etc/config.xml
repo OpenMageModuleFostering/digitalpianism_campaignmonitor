@@ -3,7 +3,7 @@
 	
 	<modules>
         <DigitalPianism_CampaignMonitor>
-            <version>0.7.0</version>
+            <version>0.7.1</version>
         </DigitalPianism_CampaignMonitor>
     </modules>
     
@@ -19,6 +19,18 @@
             </campaignmonitor>
         </routers>
     </frontend>
+	
+	<admin>
+		<routers>
+	  		<campaignmonitor>
+				<use>admin</use>
+				<args>
+		  			<module>DigitalPianism_CampaignMonitor</module>
+		  			<frontName>campaignmonitor</frontName>
+				</args>
+	  		</campaignmonitor>
+		</routers>
+  	</admin>
     
 	<global>
 	

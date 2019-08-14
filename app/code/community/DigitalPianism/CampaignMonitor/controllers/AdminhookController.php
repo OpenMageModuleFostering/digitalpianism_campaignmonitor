@@ -15,12 +15,27 @@ class DigitalPianism_CampaignMonitor_ManageController extends Mage_Newsletter_Su
         }
         else {
             try {
-                $apiKey = Mage::helper('campaignmonitor')->getApiKey();
+                
+				if (Mage::helper('campaignmonitor')->isOAuth())
+				{
+					$accessToken = Mage::getModel('campaignmonitor/auth')->getAccessToken();
+					$refreshToken = Mage::getModel('campaignmonitor/auth')->getRefreshToken();
+					
+					$auth = array(
+								'access_token' => $accessToken,
+								'refresh_token' => $refreshToken
+							);
+				}
+				else
+				{
+					$auth = Mage::helper('campaignmonitor')->getApiKey();
+				}
+				
                 $listID = Mage::helper('campaignmonitor')->getListId();
         
                 try 
 				{
-                    $client = new CS_REST_Subscribers($listID,$apiKey);
+                    $client = new CS_REST_Subscribers($listID,$auth);
                 } 
 				catch(Exception $e) 
 				{
@@ -38,6 +53,15 @@ class DigitalPianism_CampaignMonitor_ManageController extends Mage_Newsletter_Su
                     try 
 					{
                         $result = $client->unsubscribe($email);
+						if (!$result->was_successful()) {
+							// If you receive '121: Expired OAuth Token', refresh the access token
+							if ($result->response->Code == 121) {
+								// Refresh the token
+								Mage::helper('campaignmonitor')->refreshToken();
+							}
+							// Make the call again
+							$result = $client->unsubscribe($email);
+						}
                     } 
 					catch (Exception $e) 
 					{

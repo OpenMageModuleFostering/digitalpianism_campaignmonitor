@@ -11,16 +11,30 @@ class DigitalPianism_CampaignMonitor_HookController extends Mage_Newsletter_Subs
             $session   = Mage::getSingleton('core/session');
             $email     = (string)$this->getRequest()->getPost('email');
             
-            Mage::log("Fontis_CampaignMonitor: Adding newsletter subscription via frontend 'Sign up' block for $email");
+            Mage::log("DigitalPianism_CampaignMonitor: Adding newsletter subscription via frontend 'Sign up' block for $email");
 
-            $apiKey = Mage::helper('campaignmonitor')->getApiKey();
+            if (Mage::helper('campaignmonitor')->isOAuth())
+			{
+				$accessToken = Mage::getModel('campaignmonitor/auth')->getAccessToken();
+				$refreshToken = Mage::getModel('campaignmonitor/auth')->getRefreshToken();
+				
+				$auth = array(
+							'access_token' => $accessToken,
+							'refresh_token' => $refreshToken
+						);
+			}
+			else
+			{
+				$auth = Mage::helper('campaignmonitor')->getApiKey();
+			}
+			
             $listID = Mage::helper('campaignmonitor')->getListId();
         
-            if($apiKey && $listID) 
+            if($auth && $listID) 
 			{
 				try 
 				{
-                    $client = new CS_REST_Subscribers($listID,$apiKey);
+                    $client = new CS_REST_Subscribers($listID,$auth);
                 } 
 				catch(Exception $e) 
 				{
@@ -47,6 +61,20 @@ class DigitalPianism_CampaignMonitor_HookController extends Mage_Newsletter_Subs
 												"CustomFields" => $customFields,
 												"Resubscribe" => true  // if the subscriber is already unsubscried - subscribe again!
 												));
+						if (!$result->was_successful()) {
+							// If you receive '121: Expired OAuth Token', refresh the access token
+							if ($result->response->Code == 121) {
+								// Refresh the token
+								Mage::helper('campaignmonitor')->refreshToken();
+							}
+							// Make the call again
+							$result = $client->add(array(
+												"EmailAddress" => $email,
+												"Name" => $name,
+												"CustomFields" => $customFields,
+												"Resubscribe" => true  // if the subscriber is already unsubscried - subscribe again!
+												));
+						}
                     } 
 					catch(Exception $e) 
 					{
@@ -66,6 +94,20 @@ class DigitalPianism_CampaignMonitor_HookController extends Mage_Newsletter_Subs
 												"Name" => "(Guest)",
 												"Resubscribe" => true  // if the subscriber is already unsubscried - subscribe again!
 												));
+												
+						if (!$result->was_successful()) {
+							// If you receive '121: Expired OAuth Token', refresh the access token
+							if ($result->response->Code == 121) {
+								// Refresh the token
+								Mage::helper('campaignmonitor')->refreshToken();
+							}
+							// Make the call again
+							$result = $client->add(array(
+												"EmailAddress" => $email,
+												"Name" => "(Guest)",
+												"Resubscribe" => true  // if the subscriber is already unsubscried - subscribe again!
+												));
+						}
                     } 
 					catch (Exception $e) 
 					{

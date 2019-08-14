@@ -8,9 +8,23 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
                 
         $event = $observer->getEvent();    
         $customer = $event->getCustomer();
-
-        $apiKey = Mage::helper('campaignmonitor')->getApiKey();
-        $listID = Mage::helper('campaignmonitor')->getListId();
+		
+		if (Mage::helper('campaignmonitor')->isOAuth())
+		{
+			$accessToken = Mage::getModel('campaignmonitor/auth')->getAccessToken();
+			$refreshToken = Mage::getModel('campaignmonitor/auth')->getRefreshToken();
+			
+			$auth = array(
+						'access_token' => $accessToken,
+						'refresh_token' => $refreshToken
+					);
+		}
+		else
+		{
+			$auth = Mage::helper('campaignmonitor')->getApiKey();
+		}
+		
+		$listID = Mage::helper('campaignmonitor')->getListId();
         
         $name = $customer->getFirstname() . " " . $customer->getLastname();
         $newEmail = $customer->getEmail();
@@ -27,14 +41,13 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
         }
         
         //print "Name: $name, New email: $newEmail, Subscribed: $subscribed, Old email: $oldEmail<br />\n";
-
-        if($apiKey && $listID)
+		if($auth && $listID)
         {
             $customFields = Mage::helper('campaignmonitor')->generateCustomFields($customer);
             
             try 
 			{
-                $client = new CS_REST_Subscribers($listID,$apiKey);
+				$client = new CS_REST_Subscribers($listID,$auth);
             } 
 			catch(Exception $e) 
 			{
@@ -56,6 +69,16 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
                     try 
 					{
                         $result = $client->unsubscribe($oldEmail);
+						
+						if (!$result->was_successful()) {
+							// If you receive '121: Expired OAuth Token', refresh the access token
+							if ($result->response->Code == 121) {
+								// Refresh the token
+								Mage::helper('campaignmonitor')->refreshToken();
+							}
+							// Make the call again
+							$result = $client->unsubscribe($oldEmail);
+						}
                     } 
 					catch(Exception $e) 
 					{
@@ -75,6 +98,20 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
                             "Name" => $name,
                             "CustomFields" => $customFields,
 							"Resubscribe" => true));
+							
+					if (!$result->was_successful()) {
+						// If you receive '121: Expired OAuth Token', refresh the access token
+						if ($result->response->Code == 121) {
+							// Refresh the token
+							Mage::helper('campaignmonitor')->refreshToken();
+						}
+						// Make the call again
+						$result = $client->add(array(
+								"EmailAddress" => $newEmail,
+								"Name" => $name,
+								"CustomFields" => $customFields,
+								"Resubscribe" => true));
+					}
                 } 
 				catch(Exception $e) 
 				{
@@ -89,6 +126,16 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
                 try 
 				{
                     $result = $client->unsubscribe($oldEmail);
+					
+					if (!$result->was_successful()) {
+						// If you receive '121: Expired OAuth Token', refresh the access token
+						if ($result->response->Code == 121) {
+							// Refresh the token
+							Mage::helper('campaignmonitor')->refreshToken();
+						}
+						// Make the call again
+						$result = $client->unsubscribe($oldEmail);
+					}
                 } 
 				catch(Exception $e) 
 				{
@@ -104,18 +151,41 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
         $event = $observer->getEvent();
         $customer = $event->getCustomer();
 
-        $apiKey = Mage::helper('campaignmonitor')->getApiKey();
+        if (Mage::helper('campaignmonitor')->isOAuth())
+		{
+			$accessToken = Mage::getModel('campaignmonitor/auth')->getAccessToken();
+			$refreshToken = Mage::getModel('campaignmonitor/auth')->getRefreshToken();
+			
+			$auth = array(
+						'access_token' => $accessToken,
+						'refresh_token' => $refreshToken
+					);
+		}
+		else
+		{
+			$auth = Mage::helper('campaignmonitor')->getApiKey();
+		}
+		
 		$listID = Mage::helper('campaignmonitor')->getListId();
        
         $email = $customer->getEmail();
 
-        if($apiKey && $listID)
+        if($auth && $listID)
         {
             Mage::helper('campaignmonitor')->log("Customer deleted, unsubscribing: $email");
             try 
 			{
-                $client = new CS_REST_Subscribers($listID,$apiKey);
+                $client = new CS_REST_Subscribers($listID,$auth);
                 $result = $client->unsubscribe($email);
+				if (!$result->was_successful()) {
+					// If you receive '121: Expired OAuth Token', refresh the access token
+					if ($result->response->Code == 121) {
+						// Refresh the token
+						Mage::helper('campaignmonitor')->refreshToken();
+					}
+					// Make the call again
+					$result = $client->unsubscribe($email);
+				}
             } 
 			catch(Exception $e) 
 			{

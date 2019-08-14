@@ -1,0 +1,18 @@
+<?php /** @var $this DigitalPianism_CampaignMonitor_Block_Adminhtml_System_Config_Form_Field_Auth */ ?>
+
+<?php $userData = $this->getUserData(); ?>
+<?php if($userData): ?>
+
+    <h6>Access Token: <?php echo $userData->access_token;  ?> </h6>
+    <h6>Expires In (days): <?php echo ($userData->expires_in/60/60/24); ?></h6>
+    <h6>Refresh Token: <?php echo $userData->refresh_token; ?></h6>
+
+<?php endif; ?>
+<?php $authUrl = Mage::helper("adminhtml")->getUrl("campaignmonitor/adminhtml_auth/index"); ?>
+<button class="scalable save" type="button" title="Auth on Campaign Monitor" onclick="setLocation('<?php echo $authUrl; ?>')">
+    <span>
+        <span>
+            <span>Auth on Campaign Monitor</span>
+        </span>
+    </span>
+</button>
