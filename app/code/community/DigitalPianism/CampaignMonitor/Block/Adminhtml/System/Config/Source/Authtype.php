@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Class DigitalPianism_CampaignMonitor_Block_Adminhtml_System_Config_Source_Authtype
+ */
 class DigitalPianism_CampaignMonitor_Block_Adminhtml_System_Config_Source_Authtype extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
     /**

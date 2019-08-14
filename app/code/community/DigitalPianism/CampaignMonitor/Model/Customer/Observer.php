@@ -1,8 +1,14 @@
 <?php
 include_once MAGENTO_ROOT . "/lib/createsend/csrest_subscribers.php";
 
+/**
+ * Class DigitalPianism_CampaignMonitor_Model_Customer_Observer
+ */
 class DigitalPianism_CampaignMonitor_Model_Customer_Observer
 {
+    /**
+     * @param $observer
+     */
     public function check_subscription_status($observer)
     {           
                 
@@ -77,7 +83,7 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
 								Mage::helper('campaignmonitor')->refreshToken();
 							}
 							// Make the call again
-							$result = $client->unsubscribe($oldEmail);
+							$client->unsubscribe($oldEmail);
 						}
                     } 
 					catch(Exception $e) 
@@ -106,7 +112,7 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
 							Mage::helper('campaignmonitor')->refreshToken();
 						}
 						// Make the call again
-						$result = $client->add(array(
+						$client->add(array(
 								"EmailAddress" => $newEmail,
 								"Name" => $name,
 								"CustomFields" => $customFields,
@@ -134,7 +140,7 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
 							Mage::helper('campaignmonitor')->refreshToken();
 						}
 						// Make the call again
-						$result = $client->unsubscribe($oldEmail);
+						$client->unsubscribe($oldEmail);
 					}
                 } 
 				catch(Exception $e) 
@@ -146,6 +152,9 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
         }
     }
 
+    /**
+     * @param $observer
+     */
     public function customer_deleted($observer)
     {
         $event = $observer->getEvent();
@@ -184,7 +193,7 @@ class DigitalPianism_CampaignMonitor_Model_Customer_Observer
 						Mage::helper('campaignmonitor')->refreshToken();
 					}
 					// Make the call again
-					$result = $client->unsubscribe($email);
+					$client->unsubscribe($email);
 				}
             } 
 			catch(Exception $e) 

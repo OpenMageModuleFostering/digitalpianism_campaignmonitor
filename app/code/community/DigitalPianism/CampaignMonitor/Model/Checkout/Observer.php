@@ -1,8 +1,15 @@
 <?php
 // TODO MAPPING
 include_once MAGENTO_ROOT . "/lib/createsend/csrest_subscribers.php";
+
+/**
+ * Class DigitalPianism_CampaignMonitor_Model_Checkout_Observer
+ */
 class DigitalPianism_CampaignMonitor_Model_Checkout_Observer
 {
+    /**
+     * @param $observer
+     */
     public function subscribeCustomer($observer)
     {       	 
 		// Check if the checkbox has been ticked using the sessions
@@ -15,7 +22,6 @@ class DigitalPianism_CampaignMonitor_Model_Checkout_Observer
             // if (!$order->getCustomerIsGuest()) return;
             // Mage::helper('campaignmonitor')->log('passed');
 
-            $customer = $quote->getCustomer();
 			$session = Mage::getSingleton('core/session');
 
 			// Get the email using during checking out
@@ -39,20 +45,6 @@ class DigitalPianism_CampaignMonitor_Model_Checkout_Observer
 			
 			$listID = Mage::helper('campaignmonitor')->getListId();
 			$apiKey = Mage::helper('campaignmonitor')->getApiKey();
-			
-			// Variables 
-			$firstname = "";
-			$lastname = "";
-			$mobile = "";
-			$state = "";
-			$postcode = "";
-			$mobilesubscription = "";
-			$jobinterest = "";
-			$preferred_store = "";
-			$promocode = "";
-			$periodicity = "";
-			$dob = "";
-			$subscriptiondate = date("Y-m-d");
 
 			// Check if already susbcribed
 			try {
@@ -119,17 +111,6 @@ class DigitalPianism_CampaignMonitor_Model_Checkout_Observer
 				// We generate the Magento fields
 				$fullname = $quote->getBillingAddress()->getName();
 				$fullname = trim($fullname);
-				$names = explode(" ", $fullname, 2);
-				if (!empty($names) && isset($names[0]) && isset($names[1])) 
-				{
-					$firstname = (string) $names[0];
-					$lastname = (string) $names[1];
-				}
-				else 
-				{
-					$firstname = $fullname;
-					$lastname = "";
-				}
 				$customFields[] = array("Key" => "fullname", "Value" => $fullname);
 				
 				// Check the checkout method (logged in, register or guest)
@@ -156,7 +137,7 @@ class DigitalPianism_CampaignMonitor_Model_Checkout_Observer
 											Mage::helper('campaignmonitor')->refreshToken();
 										}
 										// Make the call again
-										$result = $client->add(array(
+										$client->add(array(
 												"EmailAddress" => $email,
 												"Name" => $fullname,
 												"CustomFields" => $customFields,

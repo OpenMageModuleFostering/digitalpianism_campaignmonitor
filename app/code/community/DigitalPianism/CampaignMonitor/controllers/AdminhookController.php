@@ -2,10 +2,14 @@
 include_once MAGENTO_ROOT . "/lib/createsend/csrest_subscribers.php";
 include_once Mage::getModuleDir('controllers','Mage_Newsletter').DS."SubscriberController.php";
 
+/**
+ * Class DigitalPianism_CampaignMonitor_ManageController
+ */
 class DigitalPianism_CampaignMonitor_ManageController extends Mage_Newsletter_SubscriberController
 {
 	public function massUnsubscribeAction() 
 	{
+        $session = Mage::getSingleton('core/session');
         Mage::helper('campaignmonitor')->log("massUnsubscribeAction");
 
         $subscribersIds = $this->getRequest()->getParam('subscriber');
@@ -60,7 +64,7 @@ class DigitalPianism_CampaignMonitor_ManageController extends Mage_Newsletter_Su
 								Mage::helper('campaignmonitor')->refreshToken();
 							}
 							// Make the call again
-							$result = $client->unsubscribe($email);
+							$client->unsubscribe($email);
 						}
                     } 
 					catch (Exception $e) 
@@ -78,4 +82,3 @@ class DigitalPianism_CampaignMonitor_ManageController extends Mage_Newsletter_Su
         parent::massUnsubscribeAction();
     }
 }
-?>

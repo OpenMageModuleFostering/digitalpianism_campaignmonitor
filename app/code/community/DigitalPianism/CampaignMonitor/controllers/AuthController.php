@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Class DigitalPianism_CampaignMonitor_AuthController
+ */
 class DigitalPianism_CampaignMonitor_AuthController extends Mage_Core_Controller_Front_Action
 {
 	// Frontend redirect URI for the CM OAuth authentication

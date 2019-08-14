@@ -1,10 +1,15 @@
 <?php
 include_once MAGENTO_ROOT . "/lib/createsend/csrest_subscribers.php";
 
+/**
+ * Class DigitalPianism_CampaignMonitor_UnsubscribeController
+ */
 class DigitalPianism_CampaignMonitor_UnsubscribeController extends Mage_Core_Controller_Front_Action
 {	
     public function indexAction()
     {
+        $session = Mage::getSingleton('core/session');
+
         // Don't do anything if we didn't get the email parameter
         if(isset($_GET['email']))
         {
@@ -88,7 +93,7 @@ class DigitalPianism_CampaignMonitor_UnsubscribeController extends Mage_Core_Con
 						
 						if($result->was_successful()) 
 						{
-							$collection = Mage::getModel('newsletter/subscriber')
+							Mage::getModel('newsletter/subscriber')
 									->loadByEmail($email)
 									->unsubscribe();
 							Mage::getSingleton('customer/session')->addSuccess($this->__('You were successfully unsubscribed'));
@@ -113,7 +118,7 @@ class DigitalPianism_CampaignMonitor_UnsubscribeController extends Mage_Core_Con
 						// 4 = Unconfirmed
 						if ($subscriberStatus != 3)
 						{
-							$unsubscribe = Mage::getModel('newsletter/subscriber')
+							Mage::getModel('newsletter/subscriber')
 										->loadByEmail($email)
 										->unsubscribe();
 							Mage::getSingleton('customer/session')->addSuccess($this->__('You were successfully unsubscribed'));
@@ -143,4 +148,3 @@ class DigitalPianism_CampaignMonitor_UnsubscribeController extends Mage_Core_Con
 		$this->_redirect('/');
     }
 }
-?>
